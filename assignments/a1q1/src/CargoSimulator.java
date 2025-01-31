@@ -64,9 +64,22 @@ public class CargoSimulator {
         // Create a new cargo simulator object.
         CargoSimulator sim = new CargoSimulator(1000);
 
-        // TODO: Print out how many sacks of wheat each ship is carrying.
+        // TO DO: Print out how many sacks of wheat each ship is carrying.
+        // Iterate through ships
+        sim.fleet.goFirst();
+        while (sim.fleet.itemExists()) {
+            System.out.println(sim.fleet.item().getName() + " is carrying " + sim.fleet.item().sacksOfGrainType(Grain.WHEAT) + " sacks of wheat.");
+            sim.fleet.goForth();
+        }
 
-        // TODO: Print out a message for each ship that is overloaded.
+        // TO DO: Print out a message for each ship that is overloaded.
+        sim.fleet.goFirst();
+        while (sim.fleet.itemExists()) {
+            if (sim.fleet.item().isOverloaded()) {
+                System.out.println(sim.fleet.item().getName() + " is overloaded!");
+            }
+            sim.fleet.goForth();
+        }
 
    }
 
