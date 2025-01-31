@@ -45,8 +45,20 @@ public class Ship {
      */
     public boolean isOverloaded() {
         // TODO: Implement this method.
+        double totalWeight = 0;
 
-        return false; // remove this line -- this is a temporary placeholder to avoid a compiler error.
+        cargo.goFirst();
+        while (cargo.itemExists()) {
+            totalWeight += cargo.item().getWeight();
+        }
+
+        if (totalWeight > this.capacity) {
+            return true;
+        } else {
+            return false;
+        }
+
+//        return false; // remove this line -- this is a temporary placeholder to avoid a compiler error.
     }
 
     /**
