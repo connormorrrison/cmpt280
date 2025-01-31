@@ -44,12 +44,13 @@ public class Ship {
      *         false otherwise.
      */
     public boolean isOverloaded() {
-        // TODO: Implement this method.
+        // TO DO: Implement this method.
         double totalWeight = 0;
 
         cargo.goFirst();
         while (cargo.itemExists()) {
             totalWeight += cargo.item().getWeight();
+            cargo.goForth();
         }
 
         if (totalWeight > this.capacity) {
@@ -57,8 +58,6 @@ public class Ship {
         } else {
             return false;
         }
-
-//        return false; // remove this line -- this is a temporary placeholder to avoid a compiler error.
     }
 
     /**
@@ -69,9 +68,19 @@ public class Ship {
      * @return The number of sacks of grain on this ship with a grain type equal to 'type'.
      */
     public int sacksOfGrainType(Grain type) {
-        // TODO: Implement this method.
+        // TO DO: Implement this method.
+        int count = 0;
 
-        return 0; // remove this line -- this is a temporary placeholder to avoid a compiler error.
+        cargo.goFirst();
+        while (cargo.itemExists()) {
+            // If cargo type matches target type, add to count
+            if (cargo.item().getType() == type) {
+                count += 1;
+            }
+            cargo.goForth();
+        }
+
+        return count;
     }
 
     // Accessor methods ...
