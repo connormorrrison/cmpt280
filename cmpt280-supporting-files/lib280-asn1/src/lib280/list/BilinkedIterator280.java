@@ -45,13 +45,13 @@ public class BilinkedIterator280<I> extends LinkedIterator280<I> implements Bili
 		}
 
 		// Move cursor to the last node before processing other test cases
-		cur = list.lastNode();
+		this.cur = list.lastNode();
 
 		// Case: the list has one node
-		if (cur == null) {
-			prev = null;
+		if (this.cur == null) {
+			this.prev = null;
 		} else {
-			prev = ((BilinkedNode280<I>) cur).previousNode();
+			this.prev = ((BilinkedNode280<I>) this.cur).previousNode();
 		}
 	}
 
@@ -61,17 +61,20 @@ public class BilinkedIterator280<I> extends LinkedIterator280<I> implements Bili
 	 */
 	public void goBack() throws BeforeTheStart280Exception
 	{
-		// TODO
-		if (list.before()) {
+		// TO DO
+		// Case: before the first element
+		if (this.list.before()) {
 			throw new BeforeTheStart280Exception("Cannot go back because the list is empty.");
 		}
 
-		if (list.after()) {
+		// Case: after the last element
+		if (this.list.after()) {
 			goLast();
 		} else {
-			cur = ((BilinkedNode280<I>) cur).previousNode();
-			if (cur!=null) {
-				prev = ((BilinkedNode280<I>) cur).previousNode();
+			// Case: somewhere in the list
+			this.cur = ((BilinkedNode280<I>) this.cur).previousNode();
+			if (this.cur!=null) {
+				this.prev = ((BilinkedNode280<I>) this.cur).previousNode();
 			}
 		}
 
