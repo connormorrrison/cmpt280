@@ -2,6 +2,7 @@ package lib280.list;
 
 
 import lib280.base.BilinearIterator280;
+import lib280.exception.AfterTheEnd280Exception;
 import lib280.exception.BeforeTheStart280Exception;
 import lib280.exception.ContainerEmpty280Exception;
 
@@ -37,8 +38,21 @@ public class BilinkedIterator280<I> extends LinkedIterator280<I> implements Bili
 	 */
 	public void  goLast() throws ContainerEmpty280Exception
 	{
-		// TODO
+		// TO DO
+		// Case: the list is empty
+		if (this.list.isEmpty()) {
+			throw new ContainerEmpty280Exception("Cannot go last because the list is empty.");
+		}
 
+		// Move cursor to the last node before processing other test cases
+		cur = list.lastNode();
+
+		// Case: the list has one node
+		if (cur == null) {
+			prev = null;
+		} else {
+			prev = ((BilinkedNode280<I>) cur).previousNode();
+		}
 	}
 
 	/**
@@ -48,6 +62,18 @@ public class BilinkedIterator280<I> extends LinkedIterator280<I> implements Bili
 	public void goBack() throws BeforeTheStart280Exception
 	{
 		// TODO
+		if (list.before()) {
+			throw new BeforeTheStart280Exception("Cannot go back because the list is empty.");
+		}
+
+		if (list.after()) {
+			goLast();
+		} else {
+			cur = ((BilinkedNode280<I>) cur).previousNode();
+			if (cur!=null) {
+				prev = ((BilinkedNode280<I>) cur).previousNode();
+			}
+		}
 
 	 }
 

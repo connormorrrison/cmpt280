@@ -32,11 +32,8 @@ public class BilinkedList280<I> extends LinkedList280<I> implements BilinearIter
 	 */
 	protected BilinkedNode280<I> createNewNode(I item)
 	{
-		// TODO
-
-
-		return null;  // This line is present only to prevent a compile error.  You should remove it before
-		// completing this method.
+		// TO DO
+		return new BilinkedNode280<I>(item);
 	}
 
 	/**
@@ -45,8 +42,37 @@ public class BilinkedList280<I> extends LinkedList280<I> implements BilinearIter
 	 */
 	public void insertFirst(I x) 
 	{
-		// TODO
+		// TO DO
+		// Create new node
+		BilinkedNode280<I> newNode = createNewNode(x);
 
+		// Case: the list is empty
+		if (this.isEmpty()) {
+			// Update next and prev pointers
+			newNode.setNextNode(null);
+			newNode.setPreviousNode(null);
+
+			// Update head and tail references
+			this.head = newNode;
+			this.tail = newNode;
+		} else {
+			// Case: the list has one or more elements
+			// Update next and prev pointers
+			newNode.setNextNode(this.head);
+			newNode.setPreviousNode(null);
+
+			// Update head's prev pointer
+			((BilinkedNode280<I>)this.head).setPreviousNode(newNode);
+
+			// Update cursor position
+			// If cursor is currently at the old head, adjust prev cursor pointer to the new head
+			if (this.position == this.head) {
+				prevPosition = newNode;
+			}
+
+			// The new node becomes the head
+			this.head = newNode;
+		}
 	}
 
 	/**
@@ -126,7 +152,29 @@ public class BilinkedList280<I> extends LinkedList280<I> implements BilinearIter
 	public void insertLast(I x) 
 	{
 		// TODO
+		// Create a new node
+		BilinkedNode280<I> newNode = createNewNode(x);
 
+		// Case: the list is empty
+		if (this.isEmpty()) {
+			this.insertFirst(x);
+		} else {
+			// Case: the list has one or more elements
+			// Update next and prev pointers
+			newNode.setNextNode(null);
+			newNode.setPreviousNode((BilinkedNode280<I>) this.tail);
+
+			// Update tail's next pointer
+			this.tail.setNextNode(newNode);
+
+			// The new node becomes the tail
+			this.tail = newNode;
+
+			// Update cursor position
+			if (this.after()) {
+				this.prevPosition = this.tail;
+			}
+		}
 	}
 
 	/**
@@ -279,6 +327,553 @@ public class BilinkedList280<I> extends LinkedList280<I> implements BilinearIter
 
 	/* Regression test. */
 	public static void main(String[] args) {
-		// TODO
+		//Probably doesn't achieve 100% coverage, but comes pretty close.
+
+		BilinkedList280<Integer> L = new BilinkedList280<Integer>();
+
+		// **** Test isEmpty() when the list is actually empty.
+		System.out.println(L);
+
+		System.out.print("List should be empty...");
+		if( L.isEmpty() ) System.out.println("and it is.");
+		else System.out.println("ERROR: and it is *NOT*.");
+
+
+		// **** Test goFirst() for expected exception when there is nothing in the list.
+		try {
+			L.goFirst();
+			System.out.println("ERROR: exception should have been thrown, but wasn't.");
+		}
+		catch(ContainerEmpty280Exception e) {
+			System.out.println("Caught expected exception.  OK!");
+		}
+
+		// *** Test goLast() for expected exception when there is nothing in the list.
+		try {
+			L.goLast();
+			System.out.println("ERROR: exception should have been thrown, but wasn't.");
+		}
+		catch(ContainerEmpty280Exception e) {
+			System.out.println("Caught expected exception.  OK!");
+		}
+
+
+		// Set up a few items in the list for subsequent testing.
+		L.insert(5);
+		L.insert(4);
+		L.insertLast(3);
+		L.insertLast(10);
+		//L.insertFirst(3);
+		//L.insertFirst(4);
+		//L.insertFirst(5);
+		L.insertFirst(2);
+
+		// **** Test isFull() when there are items in the list but the list is not full.
+		System.out.print("List should be 'not full'...");
+		if( !L.isFull() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		System.out.println("List should be: 2, 4, 5, 3, 10, ");
+		System.out.print(  "     and it is: ");
+		System.out.println(L);
+
+
+		// **** Test successive deletions using delete(), deleteFirst() and deleteLast()
+		// **** to see if the correct list results.
+		L.delete(5);
+		System.out.println(L);
+
+		L.deleteFirst();
+		System.out.println(L);
+
+		L.deleteLast();
+		System.out.println(L);
+
+		System.out.println("List should be: 4, 3,");
+		System.out.print(  "     and it is: ");
+		System.out.println(L);
+
+		// **** Test firstItem() and lastItem() on the resulting non-empty
+		// **** list to make sure they return correct results.
+		System.out.print("firstItem should be 4 ....");
+		if( L.firstItem() == 4 ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		System.out.print("lastItem should be 3 ....");
+		if( L.lastItem() == 3 ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test insert() for a non-empty list and verify the result is correct.
+		// **** Also indirectly tests insertFirst()
+		L.insert(5);
+		System.out.println("List should be: 5, 4, 3,");
+		System.out.print(  "     and it is: ");
+		System.out.println(L);
+
+		// **** Test that goFirst() on a non-empty list positions the cursor correctly.
+		L.goFirst();
+		System.out.print("cursor should be at 5 ....");
+		if( L.item() == 5 ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test that goForth() on a non-empty with the cursor at the beginning of the list advances correctly.
+		L.goForth();
+		System.out.print("cursor should be at 4 ....");
+		if( L.item() == 4 ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test that goForth() with the cursor in the middle of the list advances correctly.
+		L.goForth();
+		System.out.print("cursor should be at 3 ....");
+		if( L.item() == 3 ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test that goForth() with the cursor on the last item i the list advances correctly to the
+		// **** "after" position.
+		L.goForth();
+		System.out.print("cursor should be 'after' ....");
+		if( L.after() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test that itemExists() correctly returns false when the cursor is in the "after" position.
+		System.out.print("itemExists() should be false ....");
+		if( !L.itemExists() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test that goBefore() correctly positions the cursor to the "before" position when the cursor is
+		// **** not there already.
+		L.goBefore();
+		System.out.print("cursor should be 'before' ....");
+		if( L.before() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test that itemExists() correctly returns false when the cursor is in the "before" position.
+		System.out.print("itemExists() should be false ....");
+		if( !L.itemExists() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test that goAfter() correctly positions the cursor in the "after" position when the cursor is
+		// **** not there already.
+		L.goAfter();
+		System.out.print("cursor should be 'after' ....");
+		if( L.after() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test that itemExists() correctly returns false when the cursor is in the "after" position after
+		// **** previously being in the "before" position.
+		System.out.print("itemExists() should be false ....");
+		if( !L.itemExists() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test whether has() correctly locates an item at the beginning of the list.
+		System.out.print("has(5) should be true ....");
+		if( L.has(5) ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test whether has() correctly locates an item in the middle of the list.
+		System.out.print("has(4) should be true ....");
+		if( L.has(4) ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test whether has() correctly locates an item at the end of the list.
+		System.out.print("has(3) should be true ....");
+		if( L.has(3) ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test whether has() correctly fails to locate an item that is not in the list.
+		System.out.print("has(2) should be false ....");
+		if( !L.has(2) ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test insertion at the end of the list and verify the correctness of the operation.
+		L.insertLast(3);
+		System.out.println("List should be: 5, 4, 3, 3");
+		System.out.print(  "     and it is: ");
+		System.out.println(L);
+
+		// **** Test that search() correctly positions the cursor at an existing item in the middle of the list.
+		L.search(3);
+		System.out.print("itemExists() should be true ....");
+		if( L.itemExists() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		System.out.print("cursor should be at 3 ....");
+		if( L.item() == 3) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test that search() correctly positions the cursor at an existing item at the beginning
+		// **** of the list.
+		L.search(5);
+		System.out.print("itemExists() should be true ....");
+		if( L.itemExists() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		System.out.print("cursor should be at 5 ....");
+		if( L.item() == 5 ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// Turn on resume searches for subsequent tests.
+		L.resumeSearches();
+
+		// **** Test search() for the first occurrence of 3 and verify that the cursor is positioned correctly.
+		L.search(3);
+		System.out.print("itemExists() should be true ....");
+		if( L.itemExists() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		System.out.print("cursor should be at 3 ....");
+		if( L.item() == 3) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test search() for the next existing occurrence of 3 and verify that the cursor is positioned correctly.
+		L.search(3);
+		System.out.print("itemExists() should be true ....");
+		if( L.itemExists() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		System.out.print("cursor should be at 3 ....");
+		if( L.item() == 3) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test search() for the next NON-existing occurrence of 3 and verify that the cursor is
+		// correctly moved to the "after" position.
+		L.search(3);
+		System.out.print("itemExists() should be false ....");
+		if( !L.itemExists() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		System.out.print("cursor should be at 'after' ....");
+		if( L.after() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// Reset search behaviour to "restart earches."
+		L.restartSearches();
+
+		// **** Test obtain() for an existing item in the middle of the list and check that the correct item
+		// **** is returned, and that the cursor correctly did not change position.
+		System.out.print("obtain(4) should result in 4 ....");
+		if( L.obtain(4) == 4) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		System.out.print("cursor should be at 'after' ....");
+		if( L.after() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		System.out.println("List should be: 5, 4, 3, 3");
+		System.out.print(  "     and it is: ");
+		System.out.println(L);
+
+
+		// **** Test delete() for an item at the front of a non-empty list.  Verify that the list contents
+		// **** are correct and that the cursor correctly did not change position.
+		L.delete(5);
+		System.out.println("Deleted 5");
+		System.out.print("cursor should be at 'after' ....");
+		if( L.after() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		System.out.println("List should be: 4, 3, 3");
+		System.out.print(  "     and it is: ");
+		System.out.println(L);
+
+		// **** Test delete() for an item at the front of a non-empty list and verify that the
+		// **** cursor correctly did not change position.
+		L.delete(4);
+		System.out.println("Deleted 4");
+		System.out.print("cursor should be at 'after' ....");
+		if( L.after() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test delete() for an item at the front of a non-empty list and verify that the
+		// **** cursor correctly did not change position.
+		L.delete(3);
+		System.out.println("Deleted 3");
+		System.out.print("cursor should be at 'after' ....");
+		if( L.after() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test delete() for deleting the last item in the list and verify that the
+		// **** cursor correctly did not change position.
+		L.delete(3);
+		System.out.println("Deleted 3");
+		System.out.print("List should be empty...");
+		if( L.isEmpty() ) System.out.println("and it is.");
+		else System.out.println("ERROR: and it is *NOT*.");
+
+		System.out.print("cursor should be at 'after' ....");
+		if( L.after() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test that deleteFirst() correctly throws an exception when applied to an empty list.
+		System.out.println("Deleting first item from empty list.");
+		try {
+			L.deleteFirst();
+			System.out.println("ERROR: exception should have been thrown, but wasn't.");
+		}
+		catch( ContainerEmpty280Exception e ) {
+			System.out.println("Caught exception.  OK!");
+		}
+
+		// **** Test that deleteLast() correctly throws an exception when applied to an empty list.
+		System.out.println("Deleting last item from empty list.");
+		try {
+			L.deleteLast();
+			System.out.println("ERROR: exception should have been thrown, but wasn't.");
+		}
+		catch( ContainerEmpty280Exception e ) {
+			System.out.println("Caught exception. OK!");
+		}
+
+		// **** Test that delete() correctly throws an exception when applied to an empty list.
+		System.out.println("Deleting 3 from empty list.");
+		try {
+			L.delete(3);
+			System.out.println("ERROR: exception should have been thrown, but wasn't.");
+		}
+		catch( ContainerEmpty280Exception e ) {
+			System.out.println("Caught exception. OK!");
+		}
+
+		// **** Test that firstItem() correctly throws an exception when applied to an empty list.
+		System.out.println("Getting first item from empty list.");
+		try {
+			L.firstItem();
+			System.out.println("ERROR: exception should have been thrown, but wasn't.");
+		}
+		catch( ContainerEmpty280Exception e ) {
+			System.out.println("Caught exception. OK!");
+		}
+
+		// **** Test that goFirst() correctly throws an exception when applied to an empty list.
+		System.out.println("Trying to goFirst() with empty list.");
+		try {
+			L.goFirst();
+			System.out.println("ERROR: exception should have been thrown, but wasn't.");
+		}
+		catch( ContainerEmpty280Exception e ) {
+			System.out.println("Caught exception. OK!");
+		}
+
+		// **** Test that lastItem() correctly throws an exception when applied to an empty list.
+		System.out.println("Getting last item from empty list.");
+		try {
+			L.lastItem();
+			System.out.println("ERROR: exception should have been thrown, but wasn't.");
+		}
+		catch( ContainerEmpty280Exception e ) {
+			System.out.println("Caught exception. OK!");
+		}
+
+		// **** Test that delete() correctly throws an exception when the item to delete does not exist in a
+		// **** non-empty list.
+		L.insert(5);
+		System.out.println("Deleting 3 from list in which it does not exist.");
+		try {
+			L.delete(3);
+			System.out.println("ERROR: exception should have been thrown, but wasn't.");
+		}
+		catch( ItemNotFound280Exception e ) {
+			System.out.println("Caught exception. OK!");
+		}
+
+		// **** Insert some items for subsequent tests.
+		L.insert(4);
+		L.insert(3);
+		L.insert(2);
+		L.insert(1);
+
+		System.out.println("List should be: 1, 2, 3, 4, 5 ");
+		System.out.print(  "     and it is: ");
+		System.out.println(L);
+
+
+		// **** Test search() for an item at the end of a non-empty list.
+		L.search(5);
+		System.out.print("cursor should be at 5 ....");
+		if( L.item() == 5 ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test that goForth() correctly advances the cursor to the "after" position after a search that
+		// **** positions the cursor at the last item.
+		L.goForth();
+
+		System.out.print("cursor should be at 'after' ....");
+		if( L.after() ) System.out.println("and it is.  OK!");
+		else System.out.println("and it is not.  ERROR!");
+
+		// **** Test that goForth() correctly throws an exception if the cursor is already in the "after" position.
+		System.out.println("Trying to iterate past last item.");
+		try {
+			L.goForth();
+			System.out.println("ERROR: exception should have been thrown, but wasn't.");
+		}
+		catch( AfterTheEnd280Exception e ) {
+			System.out.println("Caught exception. OK!");
+		}
+
+		// **** Test that clear() correctly removes all items from the list.
+		L.clear();
+		System.out.print("List should be empty...");
+		if( L.isEmpty() ) System.out.println("and it is.");
+		else System.out.println("ERROR: and it is *NOT*.");
+
+		// **** Test that delete(), deleteFirst() and deleteLast() correctly invert a single insertion into an
+		// **** empty list.
+		L.insert(5);
+		L.delete(5);
+		L.insert(5);
+		L.deleteFirst();
+		L.insert(5);
+		L.deleteLast();
+
+		System.out.print("List should be empty...");
+		if( L.isEmpty() ) System.out.println("and it is.");
+		else System.out.println("ERROR: and it is *NOT*.");
+
+		// Set up some items for subsequent tests.
+		L.insert(5);
+		L.insert(4);
+		L.insert(3);
+		L.insert(2);
+		L.insert(1);
+		System.out.println("List should be: 1, 2, 3, 4, 5 ");
+		System.out.print(  "     and it is: ");
+		System.out.println(L);
+
+		// **** Test insertBefore() when cursor is at first element.
+		L.goFirst();
+		L.insertBefore(10);
+		System.out.println("List should be: 10, 1, 2, 3, 4, 5 ");
+		System.out.print(  "     and it is: ");
+		System.out.println(L);
+
+		// **** Test insertBefore() when cursor is after last element.
+		L.goAfter();
+		L.insertBefore(20);
+		System.out.println("List should be: 10, 1, 2, 3, 4, 5, 20 ");
+		System.out.print(  "     and it is: ");
+		System.out.println(L);
+
+		// **** Test insertBefore() when cursor is at the last element.
+		L.search(20);
+		L.insertBefore(30);
+		System.out.println("List should be: 10, 1, 2, 3, 4, 5, 30, 20 ");
+		System.out.print(  "     and it is: ");
+		System.out.println(L);
+
+		// **** Test insertBefore() for an internal elemement.
+		L.search(4);
+		L.insertBefore(40);
+		System.out.println("List should be: 10, 1, 2, 3, 40, 4, 5, 30, 20 ");
+		System.out.print(  "     and it is: ");
+		System.out.println(L);
+
+		// **** Test for an expected exception when insertBefore() is called when before() is true.
+		L.goBefore();
+		try {
+			L.insertBefore(100);
+			System.out.println("ERROR: insertBefore() with before() == true, exception should have been thrown, but wasn't.");
+		}
+		catch( InvalidState280Exception e) {
+			System.out.println("Caught expected exception. OK!");
+		}
+
+		// **** Print list in reverse order to verify that backward links in the doubly-linked cain are correct.
+		System.out.println("Reverse List should be: 20, 30, 5, 4, 40, 3, 2, 1, 10,");
+		System.out.print("And it is:              ");
+		L.goLast();
+		while(L.itemExists()) {
+			System.out.print(L.item() + ", ");
+			L.goBack();
+		}
+		System.out.println();
+
+
+		// **** Test search() for simple integer list.
+		L.goAfter();
+		L.search(40);
+		if( !L.itemExists() || (L.itemExists() && L.item() != 40) )
+			System.out.println("Error: 40 not found by search() when it should be.");
+
+		// **** Test deleteLast() when cursor is in on the last element.
+		L.search(20);
+		if(!L.itemExists() || L.item() != 20) {
+			System.out.println("Error: Cursor should be on 20 but it isn't.");
+		}
+		L.deleteLast();
+
+		if( !L.itemExists() || L.item() != 30 ) {
+			System.out.println("Error: Cursor should be on 30 but it isnt.");
+		}
+		if( L.prevPosition.item() != 5) {
+			System.out.println("Error: prevPosition should be on 5 but it isnt.");
+		}
+
+		// **** Test deleteLast() when cursor is in the "after" position and
+		// **** make sure the cursor gets updated correctly.
+		L.goAfter();
+		L.deleteLast();  // This should delete 30 leaving 5 as the last element
+		if( !L.after() ) System.out.println("Error: Cursor should be in the 'after' position but it isn't.");
+		if( L.prevPosition.item() != 5)
+			System.out.println("Error: prevPosition should be on 5 but it isn't.");
+
+
+		// **** Test search() for searching for non-comparable compound objects in a list.
+		BilinkedList280<Pair280<Integer,Double>> T = new BilinkedList280<Pair280<Integer,Double>>();
+		Pair280<Integer,Double> p = new Pair280<Integer,Double>(42, 10.0);
+		Pair280<Integer,Double> q = new Pair280<Integer,Double>(42, 10.0);
+		T.insert(p);
+		T.goAfter();
+		T.search(p);
+		if( !T.itemExists() )
+			System.out.println("Error: search for same compound non-comparable object in T failed when it should not have.");
+
+		// **** Test search() for q when only p is in the list.  This search() should fail, because p and q are not
+		// **** comparable, so reference comparison is used and p and q are different objects so they are not the same.
+		T.goAfter();
+		T.search(q);
+		if( T.itemExists() )
+			System.out.println("Error: search for equal (but not actually the same) compound non-comparable object in T succeeded when it should not have.");
+
+
+		// Define a Comparable compound object for subsequent tests.
+		class myPair extends Pair280<Integer,Double> implements Comparable<myPair> {
+
+			public myPair(Integer v1, Double v2) {
+				super(v1, v2);
+			}
+
+			public int compareTo(myPair other) {
+				if( this.firstItem < other.firstItem )
+					return -1;
+				else if( this.firstItem > other.firstItem)
+					return 1;
+				else return 0;
+			}
+		}
+
+		// Set up test conditions.
+		BilinkedList280<myPair> S = new BilinkedList280<myPair>();
+		myPair x = new myPair(42, 10.0);
+		myPair y = new myPair(42, 10.0);
+		S.insert(x);
+
+		// **** Test search() for x when only x is in the list.  This search should succeed because we are searching
+		// **** for the same actual object that is in the list, *and* the objects are Comparable.
+		S.goAfter();
+		S.search(x);
+		if( !S.itemExists() )
+			System.out.println("Error: search for same compound comparable object in T failed when it should not have.");
+
+		// **** Test search() for y when only x is in the list.  This search should succeed because even though x
+		// **** and y are different objects, the contain the same data and are Comparable, so the compareTo() method
+		// **** should deem x and y to be equal.  Thus, the search should succeed and positio the cursor at x in the
+		// **** in the list.
+		S.goAfter();
+		S.search(y);
+		if( !S.itemExists() )
+			System.out.println("Error: search for equal (but not actually the same) compound comparable object in T failed when it should not have.");
+
+
 	}
 } 
