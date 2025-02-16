@@ -1,0 +1,24 @@
+/Users/connormorrison/Library/Java/JavaVirtualMachines/openjdk-23.0.2/Contents/Home/bin/java --enable-preview -javaagent:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar=57788:/Applications/IntelliJ IDEA.app/Contents/bin -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath /Users/connormorrison/Developer/courses/cmpt280/assignments/out/production/a3q2:/Users/connormorrison/Developer/courses/cmpt280/assignments/out/production/lib280-asn3 SkillTree
+My Skill Tree:
+
+1: Elemental Mastery, Cost: 1
+     2: Hydrokinesis, Cost: 1
+          3: Healing Flow, Cost: 3
+          3: Liquid Form, Cost: 5
+     2: Pyrokinesis, Cost: 1
+          3: Flame Immunity, Cost: 2
+          3: Explosive Charge, Cost: 4
+     2: Aerokinesis, Cost: 1
+          3: Weightlessness, Cost: 2
+          3: Vacuum Step, Cost: 5
+Dependencies for Vacuum Step:
+Elemental Mastery, Cost: 1, Aerokinesis, Cost: 1, Vacuum Step, Cost: 5,
+Dependencies for Hydrokinesis:
+Elemental Mastery, Cost: 1, Hydrokinesis, Cost: 1,
+Dependencies for FakeSkill:
+FakeSkill not found.
+To get Explosive Charge you must invest 6 points.
+To get Vacuum Step you must invest 7 points.
+FakeSkill not found.
+
+Process finished with exit code 0
