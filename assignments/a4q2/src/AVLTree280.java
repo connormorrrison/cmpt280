@@ -2,11 +2,11 @@ import lib280.tree.LinkedSimpleTree280;
 import lib280.exception.ContainerEmpty280Exception;
 
 public class AVLTree280<I extends Comparable<I>> extends LinkedSimpleTree280<I> {
-    // The root of the AVL tree
+    // Root of the AVL tree
     private AVLNode280<I> root;
 
     /**
-     * Inserts the given data into the AVL tree.
+     * Inserts the data into the AVL tree
      * @param data the item to be inserted
      */
     public void insert(I data) {
@@ -14,45 +14,31 @@ public class AVLTree280<I extends Comparable<I>> extends LinkedSimpleTree280<I> 
     }
 
     /**
-     * Recursively inserts data into the subtree rooted at node and rebalances if necessary.
+     * Recursively inserts data into the subtree rooted at 'node'
      */
     private AVLNode280<I> insertRecursive(AVLNode280<I> node, I data) {
         if (node == null) {
             return new AVLNode280<>(data);
         }
+
         int cmp = data.compareTo(node.data);
         if (cmp < 0) {
             node.left = insertRecursive(node.left, data);
-        } else if (cmp > 0) {
+        }
+        else if (cmp > 0) {
             node.right = insertRecursive(node.right, data);
-        } else {
+        }
+        else {
             // Duplicate keys are not inserted.
             return node;
         }
-        updateHeight(node);
 
-        int balance = node.getLeftHeight() - node.getRightHeight();
-        // Left heavy
-        if (balance > 1) {
-            if (data.compareTo(node.left.data) < 0) {
-                node = rotateRight(node);
-            } else {
-                node = rotateLeftRight(node);
-            }
-        }
-        // Right heavy
-        else if (balance < -1) {
-            if (data.compareTo(node.right.data) > 0) {
-                node = rotateLeft(node);
-            } else {
-                node = rotateRightLeft(node);
-            }
-        }
-        return node;
+        // After standard BST insertion, update heights and restore AVL balance.
+        return restoreAVLProperty(node);
     }
 
     /**
-     * Deletes the node containing data from the AVL tree.
+     * Deletes the node containing 'data' from the AVL tree.
      * @param data the item to be deleted
      */
     public void delete(I data) {
@@ -60,7 +46,7 @@ public class AVLTree280<I extends Comparable<I>> extends LinkedSimpleTree280<I> 
     }
 
     /**
-     * Recursively deletes data from the subtree rooted at node and rebalances if necessary.
+     * Recursively deletes data from the subtree rooted at 'node'.
      */
     private AVLNode280<I> deleteRecursive(AVLNode280<I> node, I data) {
         if (node == null) return node;
@@ -68,58 +54,36 @@ public class AVLTree280<I extends Comparable<I>> extends LinkedSimpleTree280<I> 
         int cmp = data.compareTo(node.data);
         if (cmp < 0) {
             node.left = deleteRecursive(node.left, data);
-        } else if (cmp > 0) {
+        }
+        else if (cmp > 0) {
             node.right = deleteRecursive(node.right, data);
-        } else {
+        }
+        else {
             // Node with only one child or no child
             if (node.left == null || node.right == null) {
                 AVLNode280<I> temp = (node.left != null) ? node.left : node.right;
                 if (temp == null) {
                     // No child case
                     node = null;
-                } else {
+                }
+                else {
                     // One child case
                     node = temp;
                 }
-            } else {
-                // Node with two children: Get the inorder successor (smallest in the right subtree)
+            }
+            else {
+                // Node with two children: get the inorder successor (smallest in right subtree)
                 AVLNode280<I> temp = minValueNode(node.right);
                 node.data = temp.data;
                 node.right = deleteRecursive(node.right, temp.data);
             }
         }
+
+        // If node was deleted (or is null now), nothing to rebalance.
         if (node == null) return node;
 
-        updateHeight(node);
-        int balance = node.getLeftHeight() - node.getRightHeight();
-        // Left heavy
-        if (balance > 1) {
-            if (node.left != null && (node.left.getLeftHeight() - node.left.getRightHeight()) >= 0) {
-                node = rotateRight(node);
-            } else {
-                node = rotateLeftRight(node);
-            }
-        }
-        // Right heavy
-        else if (balance < -1) {
-            if (node.right != null && (node.right.getRightHeight() - node.right.getLeftHeight()) >= 0) {
-                node = rotateLeft(node);
-            } else {
-                node = rotateRightLeft(node);
-            }
-        }
-        return node;
-    }
-
-    /**
-     * Returns the node with the minimum value found in the given subtree.
-     */
-    private AVLNode280<I> minValueNode(AVLNode280<I> node) {
-        AVLNode280<I> current = node;
-        while (current.left != null) {
-            current = current.left;
-        }
-        return current;
+        // Restore AVL balance after deletion.
+        return restoreAVLProperty(node);
     }
 
     /**
@@ -137,6 +101,17 @@ public class AVLTree280<I extends Comparable<I>> extends LinkedSimpleTree280<I> 
         if (cmp == 0) return node;
         else if (cmp < 0) return searchRecursive(node.left, data);
         else return searchRecursive(node.right, data);
+    }
+
+    /**
+     * Returns the node with the minimum value found in 'node's subtree.
+     */
+    private AVLNode280<I> minValueNode(AVLNode280<I> node) {
+        AVLNode280<I> current = node;
+        while (current.left != null) {
+            current = current.left;
+        }
+        return current;
     }
 
     // --- Rotation helper methods ---
@@ -166,6 +141,45 @@ public class AVLTree280<I extends Comparable<I>> extends LinkedSimpleTree280<I> 
     private AVLNode280<I> rotateRightLeft(AVLNode280<I> node) {
         node.right = rotateRight(node.right);
         return rotateLeft(node);
+    }
+
+    /**
+     * Recomputes leftHeight and rightHeight for 'node', checks balance,
+     * and performs the appropriate rotation(s) if needed.
+     */
+    private AVLNode280<I> restoreAVLProperty(AVLNode280<I> node) {
+        if (node == null) return null;
+
+        // First update the heights from children
+        updateHeight(node);
+
+        // Calculate balance factor
+        int balance = node.getLeftHeight() - node.getRightHeight();
+
+        // Left heavy
+        if (balance > 1) {
+            // Left subtree is Left-heavy or balanced => single right rotation
+            if (node.left != null && node.left.getLeftHeight() >= node.left.getRightHeight()) {
+                node = rotateRight(node);
+            }
+            // Otherwise => left-right rotation
+            else {
+                node = rotateLeftRight(node);
+            }
+        }
+        // Right heavy
+        else if (balance < -1) {
+            // Right subtree is Right-heavy or balanced => single left rotation
+            if (node.right != null && node.right.getRightHeight() >= node.right.getLeftHeight()) {
+                node = rotateLeft(node);
+            }
+            // Otherwise => right-left rotation
+            else {
+                node = rotateRightLeft(node);
+            }
+        }
+
+        return node;
     }
 
     /**
@@ -202,7 +216,7 @@ public class AVLTree280<I extends Comparable<I>> extends LinkedSimpleTree280<I> 
         }
     }
 
-    // --- Overriding methods from LinkedSimpleTree280 to use our AVL tree's root ---
+    // --- Overriding LinkedSimpleTree280 methods to use our AVL root ---
     @Override
     public boolean isEmpty() {
         return root == null;
@@ -271,11 +285,11 @@ public class AVLTree280<I extends Comparable<I>> extends LinkedSimpleTree280<I> 
         return toStringByLevel(1);
     }
 
-    // Main method for regression testing (do not adjust)
+    // Main method for regression testing
     public static void main(String[] args) {
         AVLTree280<Integer> avlTree1 = new AVLTree280<>();
 
-        // Regression Test 1: Tree 1
+        // Regression Test 1
         System.out.println("\n");
         System.out.println("Regression Test 1: Tree 1");
 
@@ -287,50 +301,45 @@ public class AVLTree280<I extends Comparable<I>> extends LinkedSimpleTree280<I> 
         System.out.println(avlTree1.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 32:");
+        System.out.println("Insert 32:");
         avlTree1.insert(32);
         System.out.println(avlTree1.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 64:");
+        System.out.println("Insert 64:");
         avlTree1.insert(64);
         System.out.println(avlTree1.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 24:");
+        System.out.println("Insert 24:");
         avlTree1.insert(24);
         System.out.println(avlTree1.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 20:");
+        System.out.println("Insert 20:");
         avlTree1.insert(20);
         System.out.println(avlTree1.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 22:");
+        System.out.println("Insert 22:");
         avlTree1.insert(22);
         System.out.println(avlTree1.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 21:");
+        System.out.println("Insert 21:");
         avlTree1.insert(21);
         System.out.println(avlTree1.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 98:");
+        System.out.println("Insert 98:");
         avlTree1.insert(98);
         System.out.println(avlTree1.toStringByLevel());
 
-        System.out.println();
-        System.out.println();
-
-        // Regression Test 2: Tree 2
+        // Regression Test 2
         System.out.println("\n");
         System.out.println("Regression Test 2: Tree 2");
 
         AVLTree280<Integer> avlTree2 = new AVLTree280<>();
-
-        // Set test conditions
         avlTree2.insert(16);
         avlTree2.insert(32);
         avlTree2.insert(64);
@@ -344,34 +353,31 @@ public class AVLTree280<I extends Comparable<I>> extends LinkedSimpleTree280<I> 
         System.out.println(avlTree2.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nDelete 64:");
+        System.out.println("Delete 64:");
         avlTree2.delete(64);
         System.out.println(avlTree2.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nDelete 24:");
+        System.out.println("Delete 24:");
         avlTree2.delete(24);
         System.out.println(avlTree2.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nDelete 20:");
+        System.out.println("Delete 20:");
         avlTree2.delete(20);
         System.out.println(avlTree2.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nDelete 16:");
+        System.out.println("Delete 16:");
         avlTree2.delete(16);
         System.out.println(avlTree2.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nDelete 21:");
+        System.out.println("Delete 21:");
         avlTree2.delete(21);
         System.out.println(avlTree2.toStringByLevel());
 
-        System.out.println();
-        System.out.println();
-
-        // Regression Test 3: Tree 3
+        // Regression Test 3
         System.out.println("\n");
         System.out.println("Regression Test 3: Tree 3");
 
@@ -386,72 +392,72 @@ public class AVLTree280<I extends Comparable<I>> extends LinkedSimpleTree280<I> 
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 15:");
+        System.out.println("Insert 15:");
         avlTree3.insert(15);
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 35:");
+        System.out.println("Insert 35:");
         avlTree3.insert(35);
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 45:");
+        System.out.println("Insert 45:");
         avlTree3.insert(45);
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 10:");
+        System.out.println("Insert 10:");
         avlTree3.insert(10);
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 5:");
+        System.out.println("Insert 5:");
         avlTree3.insert(5);
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 20:");
+        System.out.println("Insert 20:");
         avlTree3.insert(20);
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 30:");
+        System.out.println("Insert 30:");
         avlTree3.insert(30);
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nDelete 15:");
+        System.out.println("Delete 15:");
         avlTree3.delete(15);
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 40:");
+        System.out.println("Insert 40:");
         avlTree3.insert(40);
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nDelete 45:");
+        System.out.println("Delete 45:");
         avlTree3.delete(45);
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 50:");
+        System.out.println("Insert 50:");
         avlTree3.insert(50);
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nDelete 5:");
+        System.out.println("Delete 5:");
         avlTree3.delete(5);
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nInsert 55:");
+        System.out.println("Insert 55:");
         avlTree3.insert(55);
         System.out.println(avlTree3.toStringByLevel());
 
         System.out.println("\n");
-        System.out.println("\nDelete 30:");
+        System.out.println("Delete 30:");
         avlTree3.delete(30);
         System.out.println(avlTree3.toStringByLevel());
     }
