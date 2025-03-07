@@ -24,4 +24,8 @@ public class AVLNode280<I extends Comparable<I>> {
     public void setRightHeight(int height) {
         this.rightHeight = height;
     }
+
+    public int getHeight() {
+        return Math.max(leftHeight, rightHeight) + 1 ;
+    }
 }
