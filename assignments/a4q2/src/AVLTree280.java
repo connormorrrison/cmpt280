@@ -14,7 +14,7 @@ public class AVLTree280<I extends Comparable<I>> extends LinkedSimpleTree280<I> 
     }
 
    /**
-     * Recursively inserts data into the subtree
+     * Recursively inserts unique data into the subtree
      * @param node subtree root for insertion
      * @param data value to insert
      * @return updated subtree root
@@ -198,7 +198,7 @@ public class AVLTree280<I extends Comparable<I>> extends LinkedSimpleTree280<I> 
 
     /**
      * Recalculates leftHeight and rightHeight, checks balance,
-     * and performs the appropriate rotation(s) if needed
+     * and performs the appropriate rotation(s)
      */
     private AVLNode280<I> restoreAVLProperty(AVLNode280<I> node) {
         // If node is null

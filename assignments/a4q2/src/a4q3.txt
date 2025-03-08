@@ -1,0 +1,343 @@
+/Users/connormorrison/Library/Java/JavaVirtualMachines/openjdk-23.0.2/Contents/Home/bin/java --enable-preview -javaagent:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar=51458:/Applications/IntelliJ IDEA.app/Contents/bin -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath /Users/connormorrison/Developer/courses/cmpt280/assignments/out/production/a4q2:/Users/connormorrison/Developer/courses/cmpt280/assignments/out/production/lib280-asn4 AVLTree280
+
+
+Regression Test 1: Tree 1
+Initial Tree:
+
+1: -
+Insert 16:
+
+1: 16
+
+
+Insert 32:
+
+     2: 32
+1: 16
+     2: -
+
+
+Insert 64:
+
+     2: 64
+1: 32
+     2: 16
+
+
+Insert 24:
+
+     2: 64
+1: 32
+          3: 24
+     2: 16
+          3: -
+
+
+Insert 20:
+
+     2: 64
+1: 32
+          3: 24
+     2: 20
+          3: 16
+
+
+Insert 22:
+
+          3: 64
+     2: 32
+          3: -
+1: 24
+          3: 22
+     2: 20
+          3: 16
+
+
+Insert 21:
+
+          3: 64
+     2: 32
+          3: -
+1: 24
+               4: -
+          3: 22
+               4: 21
+     2: 20
+          3: 16
+
+
+Insert 98:
+
+          3: 98
+     2: 64
+          3: 32
+1: 24
+               4: -
+          3: 22
+               4: 21
+     2: 20
+          3: 16
+
+
+Regression Test 2: Tree 2
+Initial Tree:
+
+          3: 98
+     2: 64
+          3: 32
+1: 24
+               4: -
+          3: 22
+               4: 21
+     2: 20
+          3: 16
+
+
+Delete 64:
+
+          3: -
+     2: 98
+          3: 32
+1: 24
+               4: -
+          3: 22
+               4: 21
+     2: 20
+          3: 16
+
+
+Delete 24:
+
+          3: 98
+     2: 32
+          3: -
+1: 22
+          3: 21
+     2: 20
+          3: 16
+
+
+Delete 20:
+
+          3: 98
+     2: 32
+          3: -
+1: 22
+          3: -
+     2: 21
+          3: 16
+
+
+Delete 16:
+
+          3: 98
+     2: 32
+          3: -
+1: 22
+     2: 21
+
+
+Delete 21:
+
+     2: 98
+1: 32
+     2: 22
+
+
+Regression Test 3: Tree 3
+Initial Tree:
+
+1: -
+
+
+Insert 25:
+
+1: 25
+
+
+Insert 15:
+
+     2: -
+1: 25
+     2: 15
+
+
+Insert 35:
+
+     2: 35
+1: 25
+     2: 15
+
+
+Insert 45:
+
+          3: 45
+     2: 35
+          3: -
+1: 25
+     2: 15
+
+
+Insert 10:
+
+          3: 45
+     2: 35
+          3: -
+1: 25
+          3: -
+     2: 15
+          3: 10
+
+
+Insert 5:
+
+          3: 45
+     2: 35
+          3: -
+1: 25
+          3: 15
+     2: 10
+          3: 5
+
+
+Insert 20:
+
+          3: 45
+     2: 35
+          3: -
+1: 25
+               4: 20
+          3: 15
+               4: -
+     2: 10
+          3: 5
+
+
+Insert 30:
+
+          3: 45
+     2: 35
+          3: 30
+1: 25
+               4: 20
+          3: 15
+               4: -
+     2: 10
+          3: 5
+
+
+Delete 15:
+
+          3: 45
+     2: 35
+          3: 30
+1: 25
+          3: 20
+     2: 10
+          3: 5
+
+
+Insert 40:
+
+               4: -
+          3: 45
+               4: 40
+     2: 35
+          3: 30
+1: 25
+          3: 20
+     2: 10
+          3: 5
+
+
+Delete 45:
+
+          3: 40
+     2: 35
+          3: 30
+1: 25
+          3: 20
+     2: 10
+          3: 5
+
+
+Insert 50:
+
+               4: 50
+          3: 40
+               4: -
+     2: 35
+          3: 30
+1: 25
+          3: 20
+     2: 10
+          3: 5
+
+
+Delete 5:
+
+               4: 50
+          3: 40
+               4: -
+     2: 35
+          3: 30
+1: 25
+          3: 20
+     2: 10
+          3: -
+
+
+Insert 55:
+
+               4: 55
+          3: 50
+               4: 40
+     2: 35
+          3: 30
+1: 25
+          3: 20
+     2: 10
+          3: -
+
+
+Delete 30:
+
+          3: 55
+     2: 50
+               4: 40
+          3: 35
+               4: -
+1: 25
+          3: 20
+     2: 10
+          3: -
+
+
+Regression Test 4: Search Test
+Initial Tree:
+
+          3: 50
+     2: 40
+          3: 30
+1: 20
+     2: 10
+
+
+Search 30: Found
+Search 15: Not Found
+Search 50: Found
+Search 5: Not Found
+
+
+Delete 30:
+
+          3: 50
+     2: 40
+          3: -
+1: 20
+     2: 10
+
+
+Search 30 after deletion: Not Found
+
+Process finished with exit code 0
