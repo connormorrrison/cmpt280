@@ -5,10 +5,10 @@ import lib280.exception.NoCurrentItem280Exception;
 import lib280.tree.ArrayedBinaryTree280;
 
 public class ArrayedHeap280<I extends Comparable<? super I>> extends ArrayedBinaryTree280<I> implements Dispenser280<I> {
-    /**
-     *
-     * @param capacity
-     */
+  /**
+   * Creates a heap with the given capacity
+   * @param capacity max number of elements
+   */
     @SuppressWarnings("unchecked")
     public ArrayedHeap280(int capacity) {
         super(capacity);
@@ -16,7 +16,7 @@ public class ArrayedHeap280<I extends Comparable<? super I>> extends ArrayedBina
     }
 
     /**
-     *
+     * Inserts an item into the heap
      * @param item item to be inserted into the data structure
      * @throws ContainerFull280Exception
      */
@@ -34,7 +34,7 @@ public class ArrayedHeap280<I extends Comparable<? super I>> extends ArrayedBina
         this.count++;
         this.items[this.count] = item;
 
-        // while e is larger than its parent and is not at the root:
+        // While e is larger than its parent and is not at the root,
         // swap e with its parent
         int currentPosition = this.count;
         while (currentPosition > 1 && this.items[currentPosition].compareTo(this.items[findParent(currentPosition)]) > 0) {
@@ -52,14 +52,12 @@ public class ArrayedHeap280<I extends Comparable<? super I>> extends ArrayedBina
     }
 
     /**
-     *
-     * @throws ContainerEmpty280Exception
-     * @throws NoCurrentItem280Exception
+     * Removes the largest element from the heap
+     * @throws ContainerEmpty280Exception if the heap is empty
+     * @throws NoCurrentItem280Exception if there is no current item
      */
     public void deleteItem() throws ContainerEmpty280Exception, NoCurrentItem280Exception {
-        // Implement
-        // Algorithm deleteItem(H)
-        // Removes the largest element from the heap H.
+        // Removes the largest element from the heap H
         if (this.isEmpty()) {
             throw new ContainerEmpty280Exception("Cannot delete item from an empty tree.");
         }
@@ -74,7 +72,7 @@ public class ArrayedHeap280<I extends Comparable<? super I>> extends ArrayedBina
         }
         this.count--;
 
-        // while e is smaller than its largest child
+        // While e is smaller than its largest child,
         // swap e with its largest child
         int currentParent = 1;  // Start at the root
 
@@ -107,7 +105,6 @@ public class ArrayedHeap280<I extends Comparable<? super I>> extends ArrayedBina
             this.currentNode = 1; // Point to the root
         }
     }
-
 
     /**
      * Helper for the regression test.  Verifies the heap property for all nodes.
