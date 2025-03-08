@@ -1,4 +1,4 @@
-/Users/connormorrison/Library/Java/JavaVirtualMachines/openjdk-23.0.2/Contents/Home/bin/java --enable-preview -javaagent:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar=51422:/Applications/IntelliJ IDEA.app/Contents/bin -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath /Users/connormorrison/Developer/courses/cmpt280/assignments/out/production/a4q2:/Users/connormorrison/Developer/courses/cmpt280/assignments/out/production/lib280-asn4 AVLTree280
+/Users/connormorrison/Library/Java/JavaVirtualMachines/openjdk-23.0.2/Contents/Home/bin/java --enable-preview -javaagent:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar=51458:/Applications/IntelliJ IDEA.app/Contents/bin -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath /Users/connormorrison/Developer/courses/cmpt280/assignments/out/production/a4q2:/Users/connormorrison/Developer/courses/cmpt280/assignments/out/production/lib280-asn4 AVLTree280
 
 
 Regression Test 1: Tree 1
