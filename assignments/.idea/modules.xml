@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../cmpt280-supporting-files/QuestLog-Template/QuestLog-Template.iml" filepath="$PROJECT_DIR$/../cmpt280-supporting-files/QuestLog-Template/QuestLog-Template.iml" />
       <module fileurl="file://$PROJECT_DIR$/a1q1/a1q1.iml" filepath="$PROJECT_DIR$/a1q1/a1q1.iml" />
       <module fileurl="file://$PROJECT_DIR$/a3q2/a3q2.iml" filepath="$PROJECT_DIR$/a3q2/a3q2.iml" />
       <module fileurl="file://$PROJECT_DIR$/a4q1/a4q1.iml" filepath="$PROJECT_DIR$/a4q1/a4q1.iml" />

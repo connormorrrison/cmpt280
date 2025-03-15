@@ -6,6 +6,8 @@ import lib280.tree.OrderedSimpleTree280;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 // This project uses a JAR called opencsv which is a library for reading and
 // writing CSV (comma-separated value) files.
@@ -40,9 +42,24 @@ public class QuestLog extends KeyedChainedHashTable280<String, QuestLogEntry> {
 	 * @return The array of keys (quest names) from the quest log.
 	 */
 	public String[] keys() {
-		// TODO Implement this method.
-		
-		return null;  // Remove this line you're ready.  It's just to prevent compiler errors.
+		// TO DO Implement this method.
+		ArrayList<String> keysList = new ArrayList<>();
+
+		// Iterate
+		for (int i = 0; i < this.hashArray.length; i++) {
+			if (this.hashArray[i] != null) {  // Null check
+				this.hashArray[i].goFirst();
+
+				// Traverse linked list at this hash position
+				while (this.hashArray[i].itemExists()) {
+					keysList.add(this.hashArray[i].item().key());
+					this.hashArray[i].goForth();
+				}
+			}
+		}
+
+		// Converts to array
+		return keysList.toArray(new String[0]);
 	}
 	
 	/**
@@ -52,10 +69,24 @@ public class QuestLog extends KeyedChainedHashTable280<String, QuestLogEntry> {
 	 * @return A nicely formatted quest log.
 	 */
 	public String toString() {
-		// TODO Implement this method.
+		// TO DO Implement this method.
+		// Fetch keys and sort them
+		String[] keys = this.keys();
+		Arrays.sort(keys);  // Alphabetically sort keys
+
+		StringBuffer sb = new StringBuffer();
+
+		// Append each quest log entry's details to the sb
+		for (String key : keys) {
+			QuestLogEntry entry = this.obtain(key);
+			sb.append(entry.toString()).append("\n");
+		}
+
+		// Return formatted string
+		return sb.toString();
 		
 		// Remove this following line when you're ready.  It's just to prevent compiler errors.
-		return "QuestLog.toString() not implemented yet!\n";  
+		//return "QuestLog.toString() not implemented yet!\n";
 	}
 	
 	/**
@@ -67,16 +98,34 @@ public class QuestLog extends KeyedChainedHashTable280<String, QuestLogEntry> {
 	 *         Note: if no quest named k is found, then the first item of the pair should be null.
 	 */
 	public Pair280<QuestLogEntry, Integer> obtainWithCount(String k) {
-		// TODO Implement this method.
+		// TO DO Implement this method.
 		
 		// Write a method that returns a Pair280 which contains the quest log entry with name k, 
 		// and the number QuestLogEntry objects that were examined in the process.  You need to write
 		// this method from scratch without using any of the superclass methods (mostly because
 		// the superclass methods won't be terribly useful unless you can modify them, which you
 		// aren't allowed to do!).  Except for hashPos().  You're allowed to use hashPos()!
-		
+		// Gets hash position
+		int hashPosition = hashPos(k);
+
+		int count = 0;
+		this.hashArray[hashPosition].goFirst();
+		// Iterate over chain at the hash position
+		while (this.hashArray[hashPosition].itemExists()) {
+			count++;
+
+			if (this.hashArray[hashPosition].item().key().equals(k)) {
+				// If match found return the pair with the item and count
+				return new Pair280<>(this.hashArray[hashPosition].item(), count);
+			}
+
+			this.hashArray[hashPosition].goForth();
+		}
+
+		// If the item was not found
+		return new Pair280<>(null, count);
 	
-		return null;  // Remove this line when you're ready.  It's just to prevent compiler errors.
+		//return null;  // Remove this line when you're ready.  It's just to prevent compiler errors.
 	}
 	
 	
@@ -94,7 +143,7 @@ public class QuestLog extends KeyedChainedHashTable280<String, QuestLogEntry> {
 		CSVReader inFile;
 		try {
 			//input filename on the next line - path must be relative to the working directory reported above.
-			inFile = new CSVReader(new FileReader("questLog/quests100000.csv"));
+			inFile = new CSVReader(new FileReader("../cmpt280-supporting-files/QuestLog-Template/quests100000.csv"));
 		} catch (FileNotFoundException e) {
 			System.out.println("Error: File not found.");
 			return;
@@ -129,12 +178,37 @@ public class QuestLog extends KeyedChainedHashTable280<String, QuestLogEntry> {
 	    System.out.println(treeQuestLog.toStringInorder());
 		
 
-		// TODO Determine the average number of elements examined during access for hashed quest log.
+		// TO DO Determine the average number of elements examined during access for hashed quest log.
 	    // (call hashQuestLog.obtainWithCount() for each quest in the log and find average # of access)
+		int totalExaminationsHash = 0;
+		int questCountHash = hashQuestLog.count();
+		for (String questName : hashQuestLog.keys()) {
+			Pair280<QuestLogEntry, Integer> result = hashQuestLog.obtainWithCount(questName);
+			totalExaminationsHash += result.secondItem();
+		}
+
+		double averageHash = (double) totalExaminationsHash / questCountHash;
+		System.out.printf("Avg. # of items examined per query in the hashed quest log with %d entries: %.2f%n",
+				questCountHash, averageHash);
 		
 		
-		// TODO Determine the average number of elements examined during access for lib280.tree quest log.
+		// TO DO Determine the average number of elements examined during access for lib280.tree quest log.
 	    // (call treeQuestLog.searchCount() for each quest in the log and find average # of access)
+		int totalExaminationsTree = 0;
+		int questCountTree = hashQuestLog.count(); // Use the count from the hash table
+		// Iterate through all quests in the hash table
+		for (String questName : hashQuestLog.keys()) {
+			// Create a dummy QuestLogEntry for searching
+			QuestLogEntry dummyEntry = new QuestLogEntry(questName, "", 0, 0);
+
+			// Perform the search and add the count to the total
+			totalExaminationsTree += treeQuestLog.searchCount(dummyEntry);
+		}
+
+		double averageTree = (double) totalExaminationsTree / questCountTree;
+
+		System.out.printf("Avg. # of items examined per query in the tree-based quest log with %d entries: %.2f%n",
+				questCountTree, averageTree);
 		
 	}
 	
