@@ -125,6 +125,26 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
 			
 			// TODO Link newLeaf to its proper successor/predecessor nodes and
 			//  adjust links of successor/predecessor nodes accordingly.
+
+			// 1. Capture old successor
+			LinkedLeafTwoThreeNode280<K,I> oldSuccessor = oldLeaf.next();
+
+			// 2. Set oldLeaf next to newLeaf
+			oldLeaf.setNext(newLeaf);
+
+			// 3. Set newLeaf prev to oldLeaf
+			newLeaf.setPrev(oldLeaf);
+
+			// 4. Set newLeaf next to old successor
+			newLeaf.setNext(oldSuccessor);
+
+			// 5. If oldSuccessor is null, newLeaf is the largest
+			if (oldSuccessor == null) {
+				this.largest = newLeaf;
+			} else {
+				// 6. If oldSuccessor is not null, it is the largest, set oldSuccessor prev to newLeaf
+				oldSuccessor.setPrev(newLeaf);
+			}
 			
 			// Also adjust this.largest if necessary.
 			
@@ -559,6 +579,26 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
 		T.insert(sampleItem);
 
 		// TODO Write your regression test here
+		// Regression test for 'item'
+		// Regression test for 'itemExists'
+
+		// Regression test for 'itemKey'
+		// Regression test for 'keyItemPair'
+
+		// Regression test for 'after'
+		// Regression test for 'before'
+		// Regression test for 'goAfter'
+		// Regression test for 'goBefore'
+		// Regression test for 'goFirst'
+		// Regression test for 'goForth'
+
+		// Regression test for 'deleteItem'
+		// Regression test for 'search'
+		// Regression test for 'searchCeilingOf'
+		// Regression test for 'setItem'
+
+		// Regression test for 'currentPosition'
+		// Regression test for 'goPosition'
 	
 	}
 
