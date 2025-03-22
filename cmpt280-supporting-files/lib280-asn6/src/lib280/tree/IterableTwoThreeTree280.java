@@ -320,19 +320,20 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
 				if (oldPredecessor != null) {
 					oldPredecessor.setNext(oldSuccessor);
 				} else {
-					this.smallest = oldPredecessor;
+					this.smallest = oldSuccessor;
 				}
 
 				// 5. If oldSuccessor exists, update its prev pointer; otherwise update largest pointer
 				if (oldSuccessor != null) {
 					oldSuccessor.setPrev(oldPredecessor);
 				} else {
-					this.largest = oldSuccessor;
+					this.largest = oldPredecessor;
 				}
 
 				// 6. Clean leafToDelete's pointers
 				leafToDelete.setNext(null);
 				leafToDelete.setPrev(null);
+
 				
 				// Proceed with deletion of leaf from the 2-3 tree.
 				root.setLeftSubtree(root.getMiddleSubtree());
@@ -350,9 +351,34 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
 				// TODO Unlink leaf from it's linear successor/predecessor
 				//  Hint: Be prepared to typecast where appropriate.
 		
-				// 1. Get oldSuccessor
+				// 1. Get leafToDelete
+				LinkedLeafTwoThreeNode280<K,I> leafToDelete = (LinkedLeafTwoThreeNode280<K,I>) root.getMiddleSubtree();
 
-				
+				// 2. Get oldPredecessor
+				LinkedLeafTwoThreeNode280<K,I> oldPredecessor = leafToDelete.prev();
+
+				// 3. Get oldSuccessor
+				LinkedLeafTwoThreeNode280<K,I> oldSuccessor = leafToDelete.next();
+
+				// [oldPredecessor] <-> [leafToDelete] <-> [oldSuccessor]
+				// 4. If oldPredecessor exists, update its next pointer; otherwise update smallest pointer
+				if (oldPredecessor != null) {
+					oldPredecessor.setNext(oldSuccessor);
+				} else {
+					this.smallest = oldSuccessor;
+				}
+
+				// 5. If oldSuccessor exists, update its prev pointer; otherwise update largest pointer
+				if (oldSuccessor != null) {
+					oldSuccessor.setPrev(oldPredecessor);
+				} else {
+					this.largest = oldPredecessor;
+				}
+
+				// 6. Clear leafToDelete's pointers
+				leafToDelete.setNext(null);
+				leafToDelete.setPrev(null);
+
 				
 				// Proceed with deletion from the 2-3 tree.
 				root.setMiddleSubtree(root.getRightSubtree());				
@@ -372,7 +398,33 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
 				// TODO Unlink leaf from it's linear successor/predecessor
 				//  Hint: Be prepared to typecast where appropriate.
 
-				
+				// 1. Get right most element leafToDelete
+				LinkedLeafTwoThreeNode280<K,I> leafToDelete = (LinkedLeafTwoThreeNode280<K,I>) root.getRightSubtree();
+
+				// 2. Get oldPredecessor
+				LinkedLeafTwoThreeNode280<K,I> oldPredecessor = leafToDelete.prev();
+
+				// 3. Get oldSuccessor
+				LinkedLeafTwoThreeNode280<K,I> oldSuccessor = leafToDelete.next();
+
+				// [oldPredecessor] <-> [leafToDelete] <-> [oldSuccessor]
+				// 4. If oldPredecessor exists, update its next pointer; otherwise update smallest pointer
+				if (oldPredecessor != null) {
+					oldPredecessor.setNext(oldSuccessor);
+				} else {
+					this.smallest = oldSuccessor;
+				}
+
+				// 5. If oldSuccessor exists, update its prev pointer; otherwise update largest pointer
+				if (oldSuccessor != null) {
+					oldSuccessor.setPrev(oldPredecessor);
+				} else {
+					this.largest = oldPredecessor;
+				}
+
+				// 6. Clean leafToDelete's pointers
+				leafToDelete.setNext(null);
+				leafToDelete.setPrev(null);
 				
 				
 				// Proceed with deletion of the node from the 2-3 tree.
@@ -389,6 +441,7 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
 	@Override
 	public K itemKey() throws NoCurrentItem280Exception {
 		// TODO Return the key of the item in the node on which the cursor is positioned.
+
 		
 		// This is just a placeholder to avoid compile errors. Remove it when ready.
 		return null;  
