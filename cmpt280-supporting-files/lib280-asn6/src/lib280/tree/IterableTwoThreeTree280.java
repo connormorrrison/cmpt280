@@ -441,10 +441,16 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
 	@Override
 	public K itemKey() throws NoCurrentItem280Exception {
 		// TODO Return the key of the item in the node on which the cursor is positioned.
+		// 1. Get current node at cursor
+		LinkedLeafTwoThreeNode280<K,I> currentCursor = this.cursor;
 
-		
-		// This is just a placeholder to avoid compile errors. Remove it when ready.
-		return null;  
+		// 2. Check if node at cursor has no item
+		if (currentCursor == null) {
+			throw new NoCurrentItem280Exception("No current item in this node.");
+		}
+
+		// 3. Return the key
+		return currentCursor.getKey1();
 	}
 
 
@@ -462,9 +468,16 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
 	@Override
 	public I item() throws NoCurrentItem280Exception {
 		// TODO Return the item in the node at which the cursor is positioned.
+		// 1. Get current node at cursor
+		LinkedLeafTwoThreeNode280<K,I> currentCursor = this.cursor;
 
-		// This is just a placeholder to avoid compile errors. Remove it when ready.
-		return null;  
+		// 2. Check if node at cursor has no item
+		if (currentCursor == null) {
+			throw new NoCurrentItem280Exception("No current item in this node.");
+		}
+
+		// 3. Return item
+		return currentCursor.getData();
 	}
 
 
@@ -544,7 +557,16 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
 		//  Instead, Use the inherited protected find() method to locate the node containing k if it exists,
 		//  then adjust the cursor variables to refer to it.  find() is O(log n).
 		//  If no item with key k can be found leave the cursor in the after position.
-		
+		// 1. The item does exist
+		LinkedLeafTwoThreeNode280<K,I> foundNode = (LinkedLeafTwoThreeNode280<K, I>) find(k);
+
+		// 2. If foundNode is not null
+		if (foundNode != null) {
+			this.cursor = foundNode;
+		} else {
+			// 3. If foundNode is null, leave cursor in after position
+			this.goAfter();
+		}
 
 	}
 
@@ -579,8 +601,18 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
             InvalidArgument280Exception {
 		// TODO Store the item x in the node at which the cursor is positioned *if* the item in that node's key
 		//   matches the key of x. Otherwise throw an exception indicating that the item in the node can't be replaced
-		//   becuase it's key does not match the key of x.
-		//
+		//   because it's key does not match the key of x.
+		// 1. Get currentNode
+		LinkedLeafTwoThreeNode280<K,I> currentCursor = this.cursor;
+
+		// 2. Data at currentCursor matches x
+		if (currentCursor.getData().key().equals(x.key())) {
+			currentCursor.setData(x);
+		} else {
+			// 3. Data does not match, throw exception
+			throw new InvalidArgument280Exception("Key does not match the key of x.");
+		}
+
 	}
 
 
