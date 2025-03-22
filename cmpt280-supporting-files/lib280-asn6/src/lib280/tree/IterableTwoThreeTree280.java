@@ -558,14 +558,16 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
 		//  then adjust the cursor variables to refer to it.  find() is O(log n).
 		//  If no item with key k can be found leave the cursor in the after position.
 		// 1. The item does exist
-		LinkedLeafTwoThreeNode280<K,I> foundNode = (LinkedLeafTwoThreeNode280<K, I>) find(k);
+		LinkedLeafTwoThreeNode280<K,I> found = (LinkedLeafTwoThreeNode280<K,I>) super.find(this.rootNode, k);
 
 		// 2. If foundNode is not null
-		if (foundNode != null) {
-			this.cursor = foundNode;
-		} else {
+		if (found == null) {
+			goAfter();
+		}
+		else {
 			// 3. If foundNode is null, leave cursor in after position
-			this.goAfter();
+			this.cursor = found;
+			this.prev = found.prev();
 		}
 
 	}
@@ -603,11 +605,11 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
 		//   matches the key of x. Otherwise throw an exception indicating that the item in the node can't be replaced
 		//   because it's key does not match the key of x.
 		// 1. Get currentNode
-		LinkedLeafTwoThreeNode280<K,I> currentCursor = this.cursor;
+		LinkedLeafTwoThreeNode280<K,I> currentNode = this.cursor;
 
 		// 2. Data at currentCursor matches x
-		if (currentCursor.getData().key().equals(x.key())) {
-			currentCursor.setData(x);
+		if (currentNode.getData().key().equals(x.key())) {
+			currentNode.setData(x);
 		} else {
 			// 3. Data does not match, throw exception
 			throw new InvalidArgument280Exception("Key does not match the key of x.");
@@ -620,7 +622,18 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
 	public void deleteItem() throws NoCurrentItem280Exception {
 		// TODO Remove the item at which the cursor is positioned from the tree.
 		// Leave the cursor on the successor of the deleted item.
-	
+		// 1. Get currentNode
+		LinkedLeafTwoThreeNode280<K,I> currentNode = this.cursor;
+
+		// 2. Check if currentNode is null
+		if (currentNode == null) {
+			throw new NoCurrentItem280Exception("No current item in this node.");
+		} else {
+			// 3. currentNode is not null, delete item
+			K keyToDelete = this.itemKey();
+			this.delete(keyToDelete);
+		}
+
 		// Hint: If this takes more than 5 or 6 lines, you're doing it wrong!
 	}
 
@@ -683,34 +696,132 @@ public class IterableTwoThreeTree280<K extends Comparable<? super K>, I extends 
 		IterableTwoThreeTree280<String, Loot> T =
 				new IterableTwoThreeTree280<String, Loot>();
 
-		// An example of instantiating an item. (you can remove this if you wish)
-		Loot sampleItem = new Loot("Magic Armor", 1000);
-
-		// Insert your first item! (you can remove this if you wish)
-		T.insert(sampleItem);
+//		// An example of instantiating an item. (you can remove this if you wish)
+//		Loot sampleItem = new Loot("Magic Armor", 1000);
+//
+//		// Insert your first item! (you can remove this if you wish)
+//		T.insert(sampleItem);
 
 		// TODO Write your regression test here
+		T.insert(new Loot("+1 Mace", 2000));
+		T.insert(new Loot("Blue Ioun Stone", 20000));
+		T.insert(new Loot("Leather Armor", 10));
+		T.insert(new Loot("Plate Armor", 350));
+		T.insert(new Loot("Potion of Healing", 100));
+		T.insert(new Loot("Vampiric Blade", 12000));
+		T.insert(new Loot("Hideous Halberd", 600));
+		T.insert(new Loot("Scroll of Bane", 250));
+		T.insert(new Loot("Bag of Holding", 1500));
+		T.insert(new Loot("Master Sword", 300));
+		T.insert(new Loot("Opal Gem", 60));
+		T.insert(new Loot("Light Flail", 300));
+		T.insert(new Loot("Wave Blade", 16000));
+		T.insert(new Loot("Kite Shield", 795));
+		T.insert(new Loot("Ring of Jumping", 120));
+
+		System.out.println(T.toStringByLevel());
+
+
 		// Regression test for 'item'
+		T.goFirst();
+		if (!T.itemExists() || T.item() == null) {
+			System.out.println("item: FAIL");
+		}
+
 		// Regression test for 'itemExists'
+		if (!T.itemExists()) {
+			System.out.println("itemExists: FAIL");
+		}
 
 		// Regression test for 'itemKey'
+		if (!T.itemKey().equals("+1 Mace")) {
+			System.out.println("itemKey: FAIL");
+		}
+
 		// Regression test for 'keyItemPair'
+		Pair280<String, Loot> pair = T.keyItemPair();
+		if (!pair.firstItem().equals("+1 Mace") || pair.secondItem().itemValue() != 2000) {
+			System.out.println("keyItemPair: FAIL");
+		}
 
 		// Regression test for 'after'
+		T.goAfter();
+		if (!T.after()) {
+			System.out.println("after: FAIL");
+		}
+
 		// Regression test for 'before'
+		T.goBefore();
+		if (!T.before()) {
+			System.out.println("before: FAIL");
+		}
+
 		// Regression test for 'goAfter'
+		T.goAfter();
+		if (!T.after()) {
+			System.out.println("goAfter: FAIL");
+		}
+
 		// Regression test for 'goBefore'
+		T.goBefore();
+		if (!T.before()) {
+			System.out.println("goBefore: FAIL");
+		}
+
 		// Regression test for 'goFirst'
+		T.goFirst();
+		if (!T.itemExists() || !T.item().key().equals("+1 Mace")) {
+			System.out.println("goFirst: FAIL");
+		}
+
 		// Regression test for 'goForth'
+		T.goForth();
+		if (!T.item().key().equals("Bag of Holding")) {
+			System.out.println("goForth: FAIL");
+		}
 
 		// Regression test for 'deleteItem'
+		T.search("Opal Gem");
+		T.deleteItem();
+		T.search("Opal Gem");
+		if (T.itemExists()) {
+			System.out.println("deleteItem: FAIL");
+		}
+
 		// Regression test for 'search'
+		T.search("Leather Armor");
+		if (!T.item().key().equals("Leather Armor")) {
+			System.out.println("search: FAIL");
+		}
+
 		// Regression test for 'searchCeilingOf'
+		T.searchCeilingOf("M");
+		if (!T.item().key().equals("Master Sword")) {
+			System.out.println("searchCeilingOf: FAIL");
+		}
+
 		// Regression test for 'setItem'
+		T.search("Potion of Healing");
+		T.setItem(new Loot("Potion of Healing", 120));
+		if (T.item().itemValue() != 120) {
+			System.out.println("setItem: FAIL");
+		}
 
 		// Regression test for 'currentPosition'
+		T.search("Potion of Healing");
+		T.goForth();
+		CursorPosition280 pos = T.currentPosition();
+		if (pos == null) {
+			System.out.println("currentPosition: FAIL");
+		}
+
 		// Regression test for 'goPosition'
-	
+		T.goFirst();
+		T.goPosition(pos);
+		if (!T.item().key().equals("Ring of Jumping")) {
+			System.out.println("goPosition: FAIL");
+		}
+
 	}
 
 
