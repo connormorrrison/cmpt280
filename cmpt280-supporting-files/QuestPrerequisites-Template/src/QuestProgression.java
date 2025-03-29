@@ -83,9 +83,17 @@ public class QuestProgression {
 	 */
 	public static boolean hasNoIncomingEdges(GraphMatrixRep280<QuestVertex,Edge280<QuestVertex>> G, int v) {
 		
-		// TODO Write this method
-		
-		return false;   // replace this with your own return statement -- this is just a placeholder to prevent compiler errors.
+		// TO DO Write this method
+		for (int i = 1; i <= G.numVertices(); i++) {
+			// Look for edges coming from other vertices to v
+			if (G.isAdjacent(i, v)) {
+				// Found an incoming edge, so return false
+				return false;
+			}
+		}
+
+		// Else, no incoming edges were found
+		return true;
 	}
 	
 	
@@ -97,9 +105,70 @@ public class QuestProgression {
 	 */
 	public static LinkedList280<Quest> questProgression(GraphMatrixRep280<QuestVertex,Edge280<QuestVertex>> G) {
 	
-		// TODO Write this method
-		
-		return null;  // Replace this with your own return statement -- this is jsut a placeholder to prevent compiler errors.
+		// TO DO Write this method
+		LinkedList280<Quest> L = new LinkedList280<Quest>();
+		LinkedList280<Quest> availableQuests = new LinkedList280<Quest>();
+
+		// Find all quests that have no prerequisites
+		for (int i = 1; i <= G.numVertices(); i++) {
+			if (hasNoIncomingEdges(G, i)) {
+				availableQuests.insertLast(G.vertex(i).quest());
+			}
+		}
+
+		// Process quests until none remain
+		while (!availableQuests.isEmpty()) {
+			// Find quest with highest XP from available options
+			availableQuests.goFirst();
+			Quest highestXpQuest = availableQuests.item();
+
+			availableQuests.goForth();
+			while (availableQuests.itemExists()) {
+				if (availableQuests.item().experienceValue() > highestXpQuest.experienceValue()) {
+					highestXpQuest = availableQuests.item();
+				}
+				availableQuests.goForth();
+			}
+
+			// Remove the selected quest from available list
+			availableQuests.goFirst();
+			while (availableQuests.itemExists()) {
+				if (availableQuests.item() == highestXpQuest) {
+					availableQuests.deleteItem();
+					break;
+				}
+				availableQuests.goForth();
+			}
+
+			// Add to result list
+			L.insertLast(highestXpQuest);
+
+			// Update graph and check for newly available quests
+			for (int i = 1; i <= G.numVertices(); i++) {
+				if (G.isAdjacent(highestXpQuest.id(), i)) {
+					// Remove the dependency edge
+					G.eSearch(G.vertex(highestXpQuest.id()), G.vertex(i));
+					if (G.eItemExists()) {
+						G.deleteEItem();
+					}
+
+					// If quest now has no prerequisites, make it available
+					if (hasNoIncomingEdges(G, i)) {
+						availableQuests.insertLast(G.vertex(i).quest()); // If 'i' now has no incoming edges, add it to the available quests
+					}
+				}
+			}
+		}
+
+		// Check for cycles in the graph
+		for (int i = 1; i <= G.numVertices(); i++) {
+			if (!hasNoIncomingEdges(G, i)) {
+				throw new RuntimeException("The graph has at least one cycle.");
+			}
+		}
+
+		// Return ordered quest list
+		return L;
 
 	}
 	
@@ -108,7 +177,7 @@ public class QuestProgression {
 		
 		// If you get an error reading the file here and you're using Eclipse, 
 		// remove the 'QuestPrerequisites-Template/' portion of the filename.
-		GraphMatrixRep280<QuestVertex,Edge280<QuestVertex>> questGraph = readQuestFile("QuestPrerequisites-Template/quests16.txt");
+		GraphMatrixRep280<QuestVertex,Edge280<QuestVertex>> questGraph = readQuestFile("../cmpt280-supporting-files/QuestPrerequisites-Template/quests16.txt");
 		
 		// Perform a topological sort on the graph.
 		LinkedList280<Quest> questListForMaxXp = questProgression(questGraph);
