@@ -197,71 +197,83 @@ public class KDTree280 {
         else return toStringByLevel(this.root, 1);
     }
 
-//    /**
-//     * Main method for regression testing
-//     */
-//    public static void main(String[] args) {
-//        NDPoint280[] points2D = new NDPoint280[7];
-//        points2D[0] = new NDPoint280(new double[]{5.0, 2.0});
-//        points2D[1] = new NDPoint280(new double[]{9.0, 10.0});
-//        points2D[2] = new NDPoint280(new double[]{11.0, 1.0});
-//        points2D[3] = new NDPoint280(new double[]{4.0, 3.0});
-//        points2D[4] = new NDPoint280(new double[]{2.0, 12.0});
-//        points2D[5] = new NDPoint280(new double[]{3.0, 7.0});
-//        points2D[6] = new NDPoint280(new double[]{1.0, 5.0});
-//
-//        System.out.println("Input 2D points:");
-//        for (NDPoint280 p : points2D) {
-//            System.out.println(p);
-//        }
-//
-//        KDTree280 tree2D = new KDTree280(points2D);
-//        System.out.println("\nThe 2D tree built from these points is:");
-//        System.out.println(tree2D);
-//
-//        // Test 2: Building a 3D tree from sample points
-//        NDPoint280[] points3D = new NDPoint280[8];
-//        points3D[0] = new NDPoint280(new double[]{1.0, 12.0, 0.0});
-//        points3D[1] = new NDPoint280(new double[]{18.0, 1.0, 2.0});
-//        points3D[2] = new NDPoint280(new double[]{2.0, 13.0, 16.0});
-//        points3D[3] = new NDPoint280(new double[]{7.0, 3.0, 3.0});
-//        points3D[4] = new NDPoint280(new double[]{3.0, 7.0, 5.0});
-//        points3D[5] = new NDPoint280(new double[]{16.0, 4.0, 4.0});
-//        points3D[6] = new NDPoint280(new double[]{4.0, 6.0, 1.0});
-//        points3D[7] = new NDPoint280(new double[]{5.0, 5.0, 17.0});
-//
-//        System.out.println("\nInput 3D points:");
-//        for (NDPoint280 p : points3D) {
-//            System.out.println(p);
-//        }
-//
-//        KDTree280 tree3D = new KDTree280(points3D);
-//        System.out.println("\nThe 3D tree built from these points is:");
-//        System.out.println(tree3D);
-//
-//        // Perform three range searches on the 3D tree
-//        NDPoint280 lower1 = new NDPoint280(new double[]{0.0, 1.0, 0.0});
-//        NDPoint280 upper1 = new NDPoint280(new double[]{4.0, 6.0, 3.0});
-//        System.out.println("\nLooking for points between " + lower1 + " and " + upper1 + ".");
-//        System.out.println("Found:");
-//        for (NDPoint280 p : tree3D.rangeSearch(lower1, upper1)) {
-//            System.out.println(p);
-//        }
-//
-//        NDPoint280 lower2 = new NDPoint280(new double[]{0.0, 1.0, 0.0});
-//        NDPoint280 upper2 = new NDPoint280(new double[]{8.0, 7.0, 4.0});
-//        System.out.println("\nLooking for points between " + lower2 + " and " + upper2 + ".");
-//        System.out.println("Found:");
-//        for (NDPoint280 p : tree3D.rangeSearch(lower2, upper2)) {
-//            System.out.println(p);
-//        }
-//
-//        NDPoint280 lower3 = new NDPoint280(new double[]{0.0, 1.0, 0.0});
-//        NDPoint280 upper3 = new NDPoint280(new double[]{17.0, 9.0, 10.0});
-//        System.out.println("\nLooking for points between " + lower3 + " and " + upper3 + ".");
-//        System.out.println("Found:");
-//        for (NDPoint280 p : tree3D.rangeSearch(lower3, upper3)) {
-//            System.out.println(p);
-//        }
-//    }
+    /**
+     * Main class for regression testing
+     */
+    public static void main(String[] args) {
+        // Test with k=2 (2D points)
+        System.out.println("Input 2D points:");
+        NDPoint280[] points2D = {
+                new NDPoint280(new double[]{6.0, 3.0}),
+                new NDPoint280(new double[]{8.0, 9.0}),
+                new NDPoint280(new double[]{12.0, 2.0}),
+                new NDPoint280(new double[]{3.0, 5.0}),
+                new NDPoint280(new double[]{1.0, 11.0}),
+                new NDPoint280(new double[]{4.0, 8.0}),
+                new NDPoint280(new double[]{2.0, 6.0})
+        };
+
+        // Print each point
+        for (NDPoint280 p : points2D) {
+            System.out.println(p);
+        }
+
+        // Build and display the 2D tree
+        KDTree280 tree2D = new KDTree280(points2D);
+        System.out.println("\nThe 2D lib280.tree built from these points is:");
+        System.out.println(tree2D);
+
+        // Test with k=4 (4D points) - using a different k value than the example
+        System.out.println("\nInput 4D points:");
+        NDPoint280[] points4D = {
+                new NDPoint280(new double[]{2.0, 11.0, 1.0, 7.5}),
+                new NDPoint280(new double[]{17.0, 2.0, 3.0, 9.8}),
+                new NDPoint280(new double[]{3.0, 12.0, 15.0, 2.1}),
+                new NDPoint280(new double[]{8.0, 4.0, 4.0, 5.2}),
+                new NDPoint280(new double[]{4.0, 6.0, 6.0, 8.3}),
+                new NDPoint280(new double[]{15.0, 5.0, 5.0, 1.4}),
+                new NDPoint280(new double[]{5.0, 7.0, 2.0, 6.9}),
+                new NDPoint280(new double[]{6.0, 6.0, 16.0, 3.7})
+        };
+
+        // Print each point
+        for (NDPoint280 p : points4D) {
+            System.out.println(p);
+        }
+
+        // Build and display the 4D tree
+        KDTree280 tree4D = new KDTree280(points4D);
+        System.out.println(tree4D);
+
+        // Perform range searches on the 4D tree
+        // Range search 1
+        NDPoint280 lower1 = new NDPoint280(new double[]{0.0, 1.0, 0.0, 0.0});
+        NDPoint280 upper1 = new NDPoint280(new double[]{5.0, 7.0, 3.0, 8.0});
+        System.out.println("\nLooking for points between " + lower1 + " and " + upper1 + ".");
+        System.out.println("Found:");
+        List<NDPoint280> result1 = tree4D.rangeSearch(lower1, upper1);
+        for (NDPoint280 p : result1) {
+            System.out.println(p);
+        }
+
+        // Range search 2
+        NDPoint280 lower2 = new NDPoint280(new double[]{0.0, 1.0, 0.0, 0.0});
+        NDPoint280 upper2 = new NDPoint280(new double[]{9.0, 8.0, 5.0, 10.0});
+        System.out.println("\nLooking for points between " + lower2 + " and " + upper2 + ".");
+        System.out.println("Found:");
+        List<NDPoint280> result2 = tree4D.rangeSearch(lower2, upper2);
+        for (NDPoint280 p : result2) {
+            System.out.println(p);
+        }
+
+        // Range search 3
+        NDPoint280 lower3 = new NDPoint280(new double[]{0.0, 1.0, 0.0, 0.0});
+        NDPoint280 upper3 = new NDPoint280(new double[]{18.0, 13.0, 17.0, 10.0});
+        System.out.println("\nLooking for points between " + lower3 + " and " + upper3 + ".");
+        System.out.println("Found:");
+        List<NDPoint280> result3 = tree4D.rangeSearch(lower3, upper3);
+        for (NDPoint280 p : result3) {
+            System.out.println(p);
+        }
+    }
 }
