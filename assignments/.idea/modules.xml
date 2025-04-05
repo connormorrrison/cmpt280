@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../cmpt280-supporting-files/Kruskal-Template/Kruskal-Template.iml" filepath="$PROJECT_DIR$/../cmpt280-supporting-files/Kruskal-Template/Kruskal-Template.iml" />
       <module fileurl="file://$PROJECT_DIR$/../cmpt280-supporting-files/QuestLog-Template/QuestLog-Template.iml" filepath="$PROJECT_DIR$/../cmpt280-supporting-files/QuestLog-Template/QuestLog-Template.iml" />
       <module fileurl="file://$PROJECT_DIR$/../cmpt280-supporting-files/QuestPrerequisites-Template/QuestPrerequisites-Template.iml" filepath="$PROJECT_DIR$/../cmpt280-supporting-files/QuestPrerequisites-Template/QuestPrerequisites-Template.iml" />
       <module fileurl="file://$PROJECT_DIR$/a1q1/a1q1.iml" filepath="$PROJECT_DIR$/a1q1/a1q1.iml" />
@@ -17,6 +18,7 @@
       <module fileurl="file://$PROJECT_DIR$/../cmpt280-supporting-files/lib280-asn5/lib280-asn5.iml" filepath="$PROJECT_DIR$/../cmpt280-supporting-files/lib280-asn5/lib280-asn5.iml" />
       <module fileurl="file://$PROJECT_DIR$/../cmpt280-supporting-files/lib280-asn6/lib280-asn6.iml" filepath="$PROJECT_DIR$/../cmpt280-supporting-files/lib280-asn6/lib280-asn6.iml" />
       <module fileurl="file://$PROJECT_DIR$/../cmpt280-supporting-files/lib280-asn7/lib280-asn7.iml" filepath="$PROJECT_DIR$/../cmpt280-supporting-files/lib280-asn7/lib280-asn7.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../cmpt280-supporting-files/lib280-asn8/lib280-asn8.iml" filepath="$PROJECT_DIR$/../cmpt280-supporting-files/lib280-asn8/lib280-asn8.iml" />
     </modules>
   </component>
 </project>

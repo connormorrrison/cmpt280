@@ -53,18 +53,93 @@
       *         at 1.
       */
      public Pair280<double[], int[]> shortestPathDijkstra(int startVertex) {
-         // TODO Implement this method
+         // TO DO Implement this method
+         double[] distances = new double[this.numVertices() + 1];
+         boolean[] visited = new boolean[this.numVertices() + 1];
+         int[] predecessors = new int[this.numVertices() + 1];
 
-         // Remove this return statement when you're ready -- it's a placeholder to prevent a compiler error.
-         return new Pair280<double[], int[]>(null, null);
+         // Set Dijkstra initial conditions
+         for (int i = 1; i <= this.numVertices(); i++) {
+             distances[i] = Double.POSITIVE_INFINITY;
+             visited[i] = false;
+             predecessors[i] = 0;  // 0 indicates no predecessor
+         }
+         distances[startVertex] = 0;
+
+         // Process vertices
+         for (int i = 1; i <= this.numVertices(); i++) {
+             // Find unvisited vertex with the smallest tentative distance
+             int current = -1;
+             double minDistance = Double.POSITIVE_INFINITY;
+
+             for (int j = 1; j <= this.numVertices(); j++) {
+                 if (!visited[j] && distances[j] < minDistance) {
+                     current = j;
+                     minDistance = distances[j];
+                 }
+             }
+
+             // If all remaining vertices are unreachable, we're done
+             if (current == -1 || minDistance == Double.POSITIVE_INFINITY) {
+                 break;
+             }
+
+             // Mark current as visited
+             visited[current] = true;
+
+             this.goVertex(this.vertex(current));
+             this.eGoFirst(this.vertex(current));
+
+             while (this.eItemExists()) {
+                 WeightedEdge280<V> edge = this.eItem();
+                 int neighbor = edge.secondItem().index();
+                 double weight = edge.getWeight();
+
+                 // Update if we found shorter path
+                 if (distances[current] + weight < distances[neighbor]) {
+                     distances[neighbor] = distances[current] + weight;
+                     predecessors[neighbor] = current;
+                 }
+
+                 this.eGoForth();
+             }
+         }
+
+         return new Pair280<double[], int[]>(distances, predecessors);
      }
 
      // Given a predecessors array output from this.shortestPathDijkatra, return a string
      // that represents a path from the start node to the given destination vertex 'destVertex'.
      private static String extractPath(int[] predecessors, int destVertex) {
-         // TODO Implement this method
+         // TO DO Implement this method
+         // Special case - no predecessor means either it's the start vertex or unreachable
+         if (predecessors[destVertex] == 0) {
+             return "Not reachable.";
+         }
 
-         return "";  // Remove this when you're ready -- this is a placeholder to prevent a compiler error.
+         // Build the path
+         StringBuilder path = new StringBuilder();
+         int current = destVertex;
+
+         // Using LinkedList to easily build path in correct order
+         java.util.LinkedList<Integer> pathList = new java.util.LinkedList<>();
+         pathList.add(current);
+
+         // Backtrack through predecessors
+         while (predecessors[current] != 0) {
+             current = predecessors[current];
+             pathList.addFirst(current);
+         }
+
+         // Format path as comma-separated string
+         for (Integer vertex : pathList) {
+             if (path.length() > 0) {
+                 path.append(", ");
+             }
+             path.append(vertex);
+         }
+
+         return "The path to " + destVertex + " is: " + path.toString();
      }
 
      // Regression Test
@@ -72,7 +147,7 @@
          NonNegativeWeightedGraphAdjListRep280<Vertex280> G = new NonNegativeWeightedGraphAdjListRep280<Vertex280>(1, false);
 
          if( args.length == 0)
-             G.initGraphFromFile("lib280-asn8/src/lib280/graph/weightedtestgraph.gra");
+             G.initGraphFromFile("../cmpt280-supporting-files/lib280-asn8/src/lib280/graph/weightedtestgraph.gra");
          else
              G.initGraphFromFile(args[0]);
 
